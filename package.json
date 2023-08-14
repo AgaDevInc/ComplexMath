@@ -1,0 +1,24 @@
+{
+  "name": "@agadev/complex-math",
+  "version": "1.0.0",
+  "description": "A simple math library for complex numbers",
+  "main": "lib/main.js",
+  "module": "lib/main.mjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgaDevInc/ComplexMath.git"
+  },
+  "keywords": [
+    "math",
+    "complex",
+    "complex numbers",
+    "imaginary",
+    "aga"
+  ],
+  "author": "AgaDev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AgaDevInc/ComplexMath/issues"
+  },
+  "homepage": "https://github.com/AgaDevInc/ComplexMath#readme"
+}
