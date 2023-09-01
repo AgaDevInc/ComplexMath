@@ -1,5 +1,5 @@
-import { FOREGROUND } from 'https://agacdn.onrender.com/AgaDev:colors@1.0.0/';
-import Inspecteable from 'https://agacdn.onrender.com/AgaDev:utils@1.1.0/Inspectable.class.ts';
+import { FOREGROUND } from "https://deno.land/x/colors_string@v1.0.1/constants.ts";
+import Inspecteable from "https://deno.land/x/aga_util@1.0.0/Inspectable.class.ts";
 import type { LikeNumber } from "./types.d.ts";
 const PRECISION = 14;
 const MIDDLE_PRECISION = Math.round(PRECISION/2);
@@ -44,11 +44,20 @@ function useConsts(val:number):string{
 	return `${val}`
 }
 
+/* The `ComplexNumber` class represents complex numbers and provides various methods and properties for
+working with them. */
 export default class ComplexNumber extends Inspecteable {
 	protected toConsoleColor = FOREGROUND.YELLOW
 	constructor(public real: number = 0, public imaginary: number = 0) {
 		super();
 	}
+/**
+ * The function converts a complex number to a fraction representation.
+ * @returns The function `toFraction()` returns a string representation of a complex number in fraction
+ * form. If the imaginary part of the complex number is 0, it returns the real part as a fraction. If
+ * the real part of the complex number is 0, it returns the imaginary part as a fraction with the
+ * letter "i" appended. Otherwise, it returns the real part and imaginary part as fractions,
+ */
 	toFraction(){
 		const real = ConvertToFraction(this.real);
 		const imaginary = ConvertToFraction(this.imaginary);
@@ -99,6 +108,9 @@ export default class ComplexNumber extends Inspecteable {
 	static I: ComplexNumber;
 	static One_Two: ComplexNumber;
 
+/* The `from` method in the `ComplexNumber` class is a static method that is used to create a new
+instance of the `ComplexNumber` class. It provides flexibility in creating complex numbers by
+accepting different types of input. */
 	static from(value: LikeNumber, imaginary?: number): ComplexNumber
 	static from(value: ComplexNumber): ComplexNumber
 	static from(value: LikeNumber, imaginary = 0) {

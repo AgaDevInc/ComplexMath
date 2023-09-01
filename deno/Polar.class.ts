@@ -1,4 +1,4 @@
-import Inspecteable from 'https://agacdn.onrender.com/AgaDev:utils@1.1.0/Inspectable.class.ts';
+import Inspecteable from "https://deno.land/x/aga_util@1.0.0/Inspectable.class.ts";
 import Angle, { Radians } from './Angle.class.ts';
 import ComplexNumber from './ComplexNumber.class.ts';
 import { absolute, equals } from './functions.ts';
@@ -10,6 +10,8 @@ const enum AngleType {
 	radians = 'radians',
 }
 
+/* The Polar class represents a complex number in polar form and provides methods for converting to a
+complex number in rectangular form. */
 export default class Polar extends Inspecteable {
 	constructor(public magnitude: RealNumber, public angle: Angle) {
 		super();
@@ -54,6 +56,15 @@ export default class Polar extends Inspecteable {
 	}
 }
 
+/**
+ * The function compares two polar numbers by converting them to complex numbers and checking if they
+ * are equal.
+ * @param {Polar} a - The parameter `a` is of type `Polar`, which represents a complex number in polar
+ * form. It likely has properties such as `magnitude` and `angle` that define the polar coordinates of
+ * the complex number.
+ * @param {Polar} b - The parameter `b` is of type `Polar`.
+ * @returns a boolean value.
+ */
 export function comparePolar(a: Polar, b: Polar): boolean {
 	if (a === b) return true;
 	const aComplex = a.toComplexNumber();

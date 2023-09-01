@@ -268,11 +268,9 @@ function resolveEquation(
 
 type equation = `${string}=${string}`;
 
-/**
- * Resolves an equation
- *
- * This function is not finished so it may have errors
- */
+/* The code is defining a function called `resolve` that takes in two parameters: `source` and `scope`.
+	Not finished yet.
+*/
 export default function resolve(source: equation, scope?: scope): scope;
 export default function resolve(
 	source: string,

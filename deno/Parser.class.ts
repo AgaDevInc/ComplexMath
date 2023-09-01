@@ -13,18 +13,25 @@ import tokenize, {
 	TokenOptions,
 	skip,
 	InvalidTokenError
-} from 'https://agacdn.onrender.com/AgaDev:utils@1.0.0/tokenize.fn.ts';
+} from "https://deno.land/x/aga_util@1.0.0/tokenize.fn.ts";
 import { scope, valid_var, LikeNumber } from './types.d.ts';
-import { exec } from 'https://agacdn.onrender.com/AgaDev:utils@1.0.0/util.ts';
+import { exec } from 'https://deno.land/x/aga_util@1.0.0/util.ts';
 import { EULER, I, PI } from './constants.ts';
 import { multiNumberFunction } from './util.ts';
 
+/* The `ParseComplexError` class is a custom error class that extends the built-in `Error` class in
+TypeScript. */
 export class ParseComplexError extends Error {
 	constructor(message: string) {
 		super(message);
 		this.name = 'ParseComplexError';
 	}
 }
+/* The above code is defining an enum called `TokenType` in TypeScript. This enum represents different
+types of tokens that can be used in a programming language or expression. The enum values include
+`Number`, `Operator`, `OpenParen`, `CloseParen`, `OpenBracket`, `CloseBracket`, `OpenBrace`,
+`CloseBrace`, `Constant`, and `Variable`. Each enum value is assigned a string value that represents
+its type. */
 export const enum TokenType {
 	Number = 'Number',
 	Operator = 'Operator',
@@ -66,25 +73,43 @@ const TokenizeOptions: TokenOptions<TokenType> = [
 	[/[a-z]/i, TokenType.Variable],
 ];
 
+/* The above code is defining an interface named `ParseComplexResultVariable` in TypeScript. This
+interface has four properties: */
 export interface ParseComplexResultVariable {
 	type: 'variable';
 	value: LikeNumber;
 	name: valid_var;
 }
+/* The above code is defining an interface named `ParseComplexResultConstant` in TypeScript. This
+interface has three properties: `type`, `name`, and `value`. The `type` property is of type
+`'constant'`, indicating that the parsed result is a constant. The `name` property is of type `'i' |
+'e' | 'π'`, indicating that the constant can be one of the three values: `'i'`, `'e'`, or `'π'`. */
 export interface ParseComplexResultConstant {
 	type: 'constant';
 	name: 'i' | 'e' | 'π';
 }
+/* The above code is defining an interface named `ParseComplexResultNumber` in TypeScript. This
+interface has two properties: `type` and `value`. The `type` property is of type `'number'`,
+indicating that the value being parsed is a number. The `value` property is of type `LikeNumber`,
+which is not defined in the given code snippet. */
 export interface ParseComplexResultNumber {
 	type: 'number';
 	value: LikeNumber;
 }
+/* The above code is defining an interface named `ParseComplexResultOperator` in TypeScript. This
+interface has four properties: `type`, `value`, `left`, and `right`. The `type` property is of type
+string and is used to identify the type of the object as 'operator'. The `value` property is of type
+string and represents the value of the operator. The `left` and `right` properties are of type
+`ParseComplexResult` and represent the left and right operands of the operator, respectively. */
 export interface ParseComplexResultOperator {
 	type: 'operator';
 	value: string;
 	left: ParseComplexResult;
 	right: ParseComplexResult;
 }
+/* The above code is defining an interface named `ParseComplexResultList` in TypeScript. This interface
+has two properties: `type` and `value`. The `type` property is of type string and is set to the
+value `'list'`. The `value` property is an array of `LikeNumber` objects. */
 export interface ParseComplexResultList {
 	type: 'list';
 	value: LikeNumber[];
@@ -110,6 +135,8 @@ function isMultiplication(token: Token) {
 	return false;
 }
 
+/* The Parser class is a TypeScript class that tokenizes and parses mathematical expressions, and
+provides methods for evaluating and simplifying the parsed expressions. */
 export default class Parser {
 	tokens: Token[];
 	constructor(source: string) {
@@ -261,9 +288,22 @@ export default class Parser {
 		}
 		return left;
 	}
+/**
+ * The function "parse" in TypeScript parses an expression.
+ * @returns The `parse()` method is returning the result of the `parseExpression()` method.
+ */
 	public parse() {
 		return this.parseExpression();
 	}
+/**
+ * The `evaluate` function takes a parsed expression, evaluates it, and returns the result as a complex
+ * number or an array of complex numbers.
+ * @param {ParseComplexResult} parse - The `parse` parameter is an object that represents a parsed
+ * expression. It has the following properties:
+ * @param {scope} scope - The `scope` parameter is an object that contains variables and their
+ * corresponding values. It is used to look up the values of variables when evaluating expressions.
+ * @returns The function `evaluate` returns a `LikeNumber` or an array of `LikeNumber`.
+ */
 	static evaluate(
 		parse: ParseComplexResult,
 		scope: scope
@@ -303,6 +343,17 @@ export default class Parser {
 		}
 		throw new ParseComplexError('Invalid parse');
 	}
+/**
+ * The function simplifies a parsed mathematical expression by evaluating variables and performing
+ * arithmetic operations.
+ * @param {ParseComplexResult} parse - The `parse` parameter is an object that represents a parsed
+ * mathematical expression. It has the following properties:
+ * @param {scope} scope - The `scope` parameter is an object that represents the current scope or
+ * context in which the parsing and simplification is being performed. It contains variable names as
+ * keys and their corresponding values as values. The `scope` object is used to look up the values of
+ * variables during the simplification process.
+ * @returns The function `simplify` returns a `ParseComplexResult` object.
+ */
 	static simplify(parse: ParseComplexResult, scope: scope): ParseComplexResult {
 		if (parse.type === 'variable' && scope[parse.name])
 			return {
@@ -324,11 +375,34 @@ export default class Parser {
 		return { type: 'operator', value: operator, left, right };
 	}
 }
+/**
+ * The `eval_complex` function in TypeScript evaluates a complex expression using a given scope.
+ * @param {string} value - The `value` parameter is a string that represents a complex mathematical
+ * expression or equation that you want to evaluate. It can include numbers, operators, variables, and
+ * functions.
+ * @param {scope} scope - The `scope` parameter is an object that contains variables and their
+ * corresponding values. It is used to provide a context for evaluating the expression in the `value`
+ * parameter.
+ * @returns The function `eval_complex` returns the result of evaluating the parsed expression `parse`
+ * using the provided `scope`.
+ */
 export function eval_complex(value: string, scope: scope) {
 	const parse = new Parser(value).parse();
 	return Parser.evaluate(parse, scope);
 }
 
+/**
+ * The `divide_var` function divides two variables or numbers and returns the result.
+ * @param {ParseComplexResult} _left - The `_left` parameter is of type `ParseComplexResult` and
+ * represents the left operand of the division operation. It contains information about the type and
+ * value of the left operand.
+ * @param {ParseComplexResult} _right - The `_right` parameter is the right-hand side of the division
+ * operation. It is of type `ParseComplexResult`, which is a data structure representing the result of
+ * parsing and simplifying a complex expression.
+ * @param {scope} scope - The `scope` parameter is an object that contains the values of variables in
+ * the current scope. It is used to simplify the expressions before performing the division operation.
+ * @returns a `ParseComplexResult` object.
+ */
 export function divide_var(
 	_left: ParseComplexResult,
 	_right: ParseComplexResult,
@@ -389,6 +463,19 @@ export function divide_var(
 		right,
 	};
 }
+/**
+ * The `multiply_var` function multiplies two variables or numbers together, simplifying the result if
+ * possible.
+ * @param {ParseComplexResult} _left - The `_left` parameter is of type `ParseComplexResult` and
+ * represents the left operand of the multiplication operation. It contains information about the type
+ * and value of the operand.
+ * @param {ParseComplexResult} _right - The `_right` parameter is of type `ParseComplexResult` and
+ * represents the right operand of the multiplication operation. It is used to perform the
+ * multiplication operation with the left operand `_left`.
+ * @param {scope} scope - The `scope` parameter is an object that contains the variables and their
+ * values in the current context. It is used to simplify and evaluate expressions involving variables.
+ * @returns a `ParseComplexResult` object.
+ */
 export function multiply_var(
 	_left: ParseComplexResult,
 	_right: ParseComplexResult,
@@ -504,6 +591,20 @@ export function multiply_var(
 		right,
 	};
 }
+/**
+ * The `add_var` function takes two parsed complex expressions and a scope, and returns the result of
+ * adding them together.
+ * @param {ParseComplexResult} _left - The `_left` parameter is a `ParseComplexResult` object
+ * representing the left operand of the addition operation. It contains information about the type and
+ * value of the operand.
+ * @param {ParseComplexResult} _right - The `_right` parameter is a `ParseComplexResult` object that
+ * represents the right operand of the addition operation. It contains information about the type and
+ * value of the operand, as well as any nested expressions.
+ * @param {scope} scope - The `scope` parameter is an object that represents the current scope or
+ * environment in which the variables and functions are defined. It is used to look up the values of
+ * variables and perform operations on them.
+ * @returns The function `add_var` returns a `ParseComplexResult` object.
+ */
 export function add_var(
 	_left: ParseComplexResult,
 	_right: ParseComplexResult,
@@ -533,6 +634,19 @@ export function add_var(
 	}
 	return { type: 'operator', value: '+', left, right };
 }
+/**
+ * The function subtracts two variables or numbers and returns the result.
+ * @param {ParseComplexResult} _left - The `_left` parameter is of type `ParseComplexResult` and
+ * represents the left operand of the subtraction operation. It contains information about the type and
+ * value of the left operand.
+ * @param {ParseComplexResult} _right - The `_right` parameter is the right operand of the subtraction
+ * operation. It is of type `ParseComplexResult`, which represents the result of parsing and
+ * simplifying a complex expression.
+ * @param {scope} scope - The `scope` parameter is an object that contains the variables and their
+ * values in the current scope. It is used to resolve any variable references in the expression being
+ * evaluated.
+ * @returns a `ParseComplexResult` object.
+ */
 export function subtract_var(
 	_left: ParseComplexResult,
 	_right: ParseComplexResult,
@@ -570,6 +684,19 @@ export function subtract_var(
 	}
 	return { type: 'operator', value: '-', left, right };
 }
+/**
+ * The `power_var` function calculates the power of two numbers or expressions.
+ * @param {ParseComplexResult} _left - The `_left` parameter is of type `ParseComplexResult` and
+ * represents the left operand of the power operation. It can be a number, a variable, or an operator
+ * expression.
+ * @param {ParseComplexResult} _right - The `_right` parameter is the exponent value in the power
+ * operation. It represents the number or expression that will be raised to the power of another number
+ * or expression.
+ * @param {scope} scope - The `scope` parameter is an object that represents the current scope or
+ * environment in which the code is being executed. It typically contains variables and their
+ * corresponding values that are accessible within the code.
+ * @returns a `ParseComplexResult` object.
+ */
 export function power_var(
 	_left: ParseComplexResult,
 	_right: ParseComplexResult,
@@ -612,6 +739,16 @@ export function power_var(
 	}
 	return { type: 'operator', value: '^', left, right };
 }
+/**
+ * The function calculates the result of raising a number or a list of numbers to a given exponent.
+ * @param {| ParseComplexResultNumber
+ * 		| ParseComplexResultConstant
+ * 		| ParseComplexResultList} right - The `right` parameter can have one of three types:
+ * @param {LikeNumber} exponent - The `exponent` parameter represents the power to which the `right`
+ * variable will be raised. It can be any numeric value.
+ * @returns The function `multiple_power_var` returns either a `ParseComplexResultNumber` or a
+ * `ParseComplexResultList` depending on the input parameters and the logic inside the function.
+ */
 export function multiple_power_var(
 	right:
 		| ParseComplexResultNumber
@@ -640,6 +777,13 @@ export function multiple_power_var(
 	return { type: 'list', value: response };
 }
 
+/**
+ * The function `getValue` takes a `ParseComplexResult` object and returns the corresponding value(s)
+ * based on the type of the parse.
+ * @param {ParseComplexResult} parse - The `parse` parameter is an object that represents a parsed
+ * mathematical expression. It has the following properties:
+ * @returns a value of type `LikeNumber` or `LikeNumber[]`.
+ */
 export function getValue(parse: ParseComplexResult): LikeNumber | LikeNumber[] {
 	if (parse.type === 'number') return parse.value;
 	if (parse.type === 'constant') {
